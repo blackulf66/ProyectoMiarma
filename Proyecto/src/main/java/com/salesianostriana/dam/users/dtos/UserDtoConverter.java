@@ -1,0 +1,20 @@
+package com.salesianostriana.dam.users.dtos;
+
+import com.salesianostriana.dam.users.models.UserEntity;
+import org.springframework.stereotype.Component;
+
+@Component
+public class UserDtoConverter {
+    public GetUserDto convertUserEntityToGetUserDto(UserEntity user) {
+        return GetUserDto.builder()
+                .id(user.getId())
+                .avatar(user.getAvatar())
+                .fullName(user.getFullName())
+                .email(user.getEmail())
+                .role(user.getRole())
+                .build();
+    }
+
+}
+
+
