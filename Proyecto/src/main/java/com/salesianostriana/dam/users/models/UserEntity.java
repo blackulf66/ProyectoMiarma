@@ -17,10 +17,7 @@ import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name="users")
@@ -31,59 +28,42 @@ import java.util.UUID;
 @Builder
 public class UserEntity implements UserDetails {
 
-
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator",
-            parameters = {
-                    @Parameter(
-                            name = "uuid_gen_strategy_class",
-                            value = "org.hibernate.id.uuid.CustomVersionOneStrategy"
-                    )
-            }
-    )
-    @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @NaturalId
-    @Column(unique = true, updatable = false)
     private String email;
 
     private String password;
 
     private String avatar;
 
-    private String fullName;
+    private Date fecha;
 
-    @Enumerated(EnumType.STRING)
+    private String nick;
+
     private UserRole role;
 
-    @CreatedDate
-    private LocalDateTime createdAt;
+    private boolean perfilprivado;
 
-    @Builder.Default
-    private LocalDateTime lastPasswordChangeAt = LocalDateTime.now();
-
-
-    public UserEntity(String email, String password, String avatar, String fullName , UserRole role) {
+    public UserEntity(UUID id, String email, String password, String avatar, Date fecha, String nick, UserRole role,Boolean perfilprivado) {
+        this.id = id;
         this.email = email;
         this.password = password;
         this.avatar = avatar;
-        this.fullName = fullName;
+        this.fecha = fecha;
+        this.nick = nick;
         this.role = role;
+        this.perfilprivado = perfilprivado;
     }
 
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
+        return null;
     }
-
 
     public String getUsername() {
         return email;
     }
-
 
     public boolean isAccountNonExpired() {
         return true;
@@ -93,11 +73,9 @@ public class UserEntity implements UserDetails {
         return true;
     }
 
-
     public boolean isCredentialsNonExpired() {
         return true;
     }
-
 
     public boolean isEnabled() {
         return true;

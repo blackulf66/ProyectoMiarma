@@ -1,11 +1,12 @@
-package com.salesianostriana.dam.dto;
+package com.salesianostriana.dam.dto.user;
 
-import com.dam.grupo2.realstate.users.models.UserRole;
+import com.salesianostriana.dam.users.models.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.UUID;
 
 @Data
@@ -15,6 +16,8 @@ import java.util.UUID;
 public class GetUsuarioDto {
     private UUID id;
     private UserRole rol ;
-    private String nombre , apellidos ,direccion ,email ,telefono ,avatar, password ;
+    private String nombre , apellidos ,email ,avatar, password;
+    private Date fecha;
+    private boolean perfilPrivado;
 
 }

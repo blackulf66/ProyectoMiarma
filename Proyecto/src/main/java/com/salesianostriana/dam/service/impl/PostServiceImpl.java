@@ -1,9 +1,9 @@
 package com.salesianostriana.dam.service.impl;
 
-import com.salesianostriana.dam.dto.CreateProductoDto;
-import com.salesianostriana.dam.model.ProductoRepository;
-import com.salesianostriana.dam.model.Producto;
-import com.salesianostriana.dam.service.ProductoService;
+import com.salesianostriana.dam.dto.post.CreatePostDto;
+import com.salesianostriana.dam.repository.PostRepository;
+import com.salesianostriana.dam.model.Post;
+import com.salesianostriana.dam.service.PostService;
 import com.salesianostriana.dam.service.StorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,13 +14,13 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ProductoServiceImpl implements ProductoService {
+public class PostServiceImpl implements PostService {
 
-    private final ProductoRepository repository;
+    private final PostRepository postRepository;
     private final StorageService storageService;
 
     @Override
-    public Producto save(CreateProductoDto createProductoDto, MultipartFile file) {
+    public Post save(CreatePostDto createPostDto, MultipartFile file) {
 
         String filename = storageService.store(file);
 
@@ -29,16 +29,16 @@ public class ProductoServiceImpl implements ProductoService {
                 .path(filename)
                 .toUriString();
 
-        return repository.save(Producto.builder()
-                        .nombre(createProductoDto.getNombre())
-                        .pvp(createProductoDto.getPvp())
+        return postRepository.save(Post.builder()
+                        .nombre(createPostDto.getNombre())
                         .imagen(uri)
                 .build());
     }
 
+
     @Override
-    public List<Producto> findAll() {
-        return repository.findAll();
+    public List<Post> findAll() {
+        return postRepository.findAll();
     }
 
 

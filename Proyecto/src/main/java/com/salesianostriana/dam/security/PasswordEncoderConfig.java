@@ -1,4 +1,4 @@
-package com.dam.grupo2.realstate.security;
+package com.salesianostriana.dam.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,4 +13,3 @@ public class PasswordEncoderConfig {
     }
 
 }
-

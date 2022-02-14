@@ -11,15 +11,14 @@ import javax.persistence.Id;
 @NoArgsConstructor @AllArgsConstructor
 @Builder
 @Getter @Setter
-public class Producto {
-
+public class Post {
     @Id
     @GeneratedValue
     private Long id;
 
-    private String nombre;
+    private String titulo;
 
-    private double pvp;
+    private String texto;
 
     private String imagen;
 

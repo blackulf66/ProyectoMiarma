@@ -1,6 +1,7 @@
 package com.salesianostriana.dam.security.jwt;
 
-import com.dam.grupo2.realstate.users.models.UserEntity;
+
+import com.salesianostriana.dam.users.models.UserEntity;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
+
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;

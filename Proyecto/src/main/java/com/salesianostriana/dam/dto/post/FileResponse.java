@@ -1,4 +1,4 @@
-package com.salesianostriana.dam.dto;
+package com.salesianostriana.dam.dto.post;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

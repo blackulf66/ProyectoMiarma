@@ -9,10 +9,12 @@ public class UserDtoConverter {
         return GetUserDto.builder()
                 .id(user.getId())
                 .avatar(user.getAvatar())
-                .fullName(user.getFullName())
+                .nick(user.getNick())
                 .email(user.getEmail())
-                .role(user.getRole())
+                .fecha(user.getFecha())
+                .perfilPrivado(user.isPerfilprivado())
                 .build();
+
     }
 
 }

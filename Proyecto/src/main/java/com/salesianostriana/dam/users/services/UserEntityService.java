@@ -23,57 +23,21 @@ public class UserEntityService extends BaseService<UserEntity, UUID, UserEntityR
 
     private final PasswordEncoder passwordEncoder;
 
-        public UserEntity saveprop(CreateUserDto newUser) {
-            if (newUser.getPassword().contentEquals(newUser.getPassword2())) {
+        public UserEntity saveuser(CreateUserDto newUser) {
+            if (newUser.getPassword().contentEquals(newUser.getPassword())) {
                 UserEntity userEntity = UserEntity.builder()
                         .password(passwordEncoder.encode(newUser.getPassword()))
                         .avatar(newUser.getAvatar())
-                        .fullName(newUser.getFullname())
+                        .nick(newUser.getNick())
                         .email(newUser.getEmail())
-                        .role(UserRole.PROPIETARIO)
+                        .role(UserRole.USER)
+                        .perfilprivado(newUser.isPerfilPrivado())
                         .build();
-
                 return save(userEntity);
-
             } else {
                 return null;
             }
         }
-
-        public UserEntity saveadmin(CreateUserDto newUser) {
-            if (newUser.getPassword().contentEquals(newUser.getPassword2())) {
-                UserEntity userEntity = UserEntity.builder()
-                        .password(passwordEncoder.encode(newUser.getPassword()))
-                        .avatar(newUser.getAvatar())
-                        .fullName(newUser.getFullname())
-                        .email(newUser.getEmail())
-                        .role(UserRole.ADMIN)
-                        .build();
-
-                return save(userEntity);
-
-            } else {
-                return null;
-            }
-        }
-
-            public UserEntity savegestor(CreateUserDto newUser) {
-                if (newUser.getPassword().contentEquals(newUser.getPassword2())) {
-                    UserEntity userEntity = UserEntity.builder()
-                            .password(passwordEncoder.encode(newUser.getPassword()))
-                            .avatar(newUser.getAvatar())
-                            .fullName(newUser.getFullname())
-                            .email(newUser.getEmail())
-                            .role(UserRole.GESTOR)
-                            .build();
-
-                    return save(userEntity);
-
-                } else {
-                    return null;
-                }
-        }
-
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -85,7 +49,4 @@ public class UserEntityService extends BaseService<UserEntity, UUID, UserEntityR
         return this.repositorio.findUserByRole(userRole)
                 .orElseThrow(()-> new UsernameNotFoundException(userRole + " no encontrado"));
     }
-
-
-
 }

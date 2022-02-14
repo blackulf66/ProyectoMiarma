@@ -7,7 +7,6 @@ import java.nio.file.Path;
 import java.util.stream.Stream;
 
 public interface StorageService {
-
     void init();
 
     String store(MultipartFile file);
@@ -21,5 +20,6 @@ public interface StorageService {
     void deleteFile(String filename);
 
     void deleteAll();
+
 
 }

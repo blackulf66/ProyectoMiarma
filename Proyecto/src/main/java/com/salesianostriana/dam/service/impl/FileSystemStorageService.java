@@ -32,7 +32,6 @@ public class FileSystemStorageService implements StorageService {
         this.rootLocation = Paths.get(properties.getLocation());
     }
 
-
     @PostConstruct
     @Override
     public void init() {
@@ -70,14 +69,11 @@ public class FileSystemStorageService implements StorageService {
                         StandardCopyOption.REPLACE_EXISTING);
             }
 
-
-
         } catch (IOException ex) {
             throw new StorageException("Error en el almacenamiento del fichero: " + newFilename, ex);
         }
 
         return newFilename;
-
     }
 
     @Override

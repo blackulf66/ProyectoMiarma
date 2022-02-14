@@ -1,20 +1,23 @@
-package com.salesianostriana.dam.dto;
+package com.salesianostriana.dam.dto.user;
 
-import com.dam.grupo2.realstate.users.models.UserEntity;
+import com.salesianostriana.dam.users.models.UserEntity;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UsuarioDtoConverter {
     public UserEntity createUsuarioDtoTousuario(CreateUsuarioDto c) {
         return new UserEntity(
-                c.getEmail(),
-                c.getPassword(),
-                c.getAvatar(),
-                c.getApellidos(),
-                c.getRol()
-
+               c.getId(),
+               c.getEmail(),
+               c.getPassword(),
+               c.getAvatar(),
+               c.getFecha(),
+               c.getApellidos(),
+               c.getRol(),
+               c.isPerfilPrivado()
         );
     }
+
     public GetUsuarioDto usuarioToGetUsuarioDto(UserEntity u) {
         return GetUsuarioDto
                 .builder()

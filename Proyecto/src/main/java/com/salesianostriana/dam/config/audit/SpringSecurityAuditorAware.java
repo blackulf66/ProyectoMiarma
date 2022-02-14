@@ -1,7 +1,7 @@
 package com.salesianostriana.dam.config.audit;
 
 
-import com.dam.grupo2.realstate.users.models.UserEntity;
+import com.salesianostriana.dam.users.models.UserEntity;
 import lombok.extern.java.Log;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;

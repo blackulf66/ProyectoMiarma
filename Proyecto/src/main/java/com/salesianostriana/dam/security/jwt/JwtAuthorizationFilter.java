@@ -1,6 +1,6 @@
 package com.salesianostriana.dam.security.jwt;
-import com.dam.grupo2.realstate.users.models.UserEntity;
-import com.dam.grupo2.realstate.users.services.UserEntityService;
+import com.salesianostriana.dam.users.models.UserEntity;
+import com.salesianostriana.dam.users.services.UserEntityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -42,7 +42,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     UsernamePasswordAuthenticationToken authentication =
                             new UsernamePasswordAuthenticationToken(
                                     user,
-                                    user.getRole(),
                                     user.getAuthorities()
                             );
                     authentication.setDetails(new WebAuthenticationDetails(request));

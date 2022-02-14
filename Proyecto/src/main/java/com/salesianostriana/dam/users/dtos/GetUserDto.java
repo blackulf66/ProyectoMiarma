@@ -3,6 +3,7 @@ package com.salesianostriana.dam.users.dtos;
 import com.salesianostriana.dam.users.models.UserRole;
 import lombok.*;
 
+import java.util.Date;
 import java.util.UUID;
 
 @Getter
@@ -14,9 +15,9 @@ public class GetUserDto {
 
     private UUID id;
     private String avatar;
-    private String fullName;
+    private String nick;
     private String email;
-    private UserRole role;
-
+    private Date fecha;
+    private boolean perfilPrivado;
 
 }
