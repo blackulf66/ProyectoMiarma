@@ -7,10 +7,10 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 
 @EnableConfigurationProperties(StorageProperties.class)
 @SpringBootApplication
-public class UploadApplication {
+public class Application {
 
 	public static void main(String[] args) {
-		SpringApplication.run(UploadApplication.class, args);
+		SpringApplication.run(Application.class, args);
 	}
 
 }

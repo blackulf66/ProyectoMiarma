@@ -6,6 +6,7 @@ import lombok.*;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.util.UUID;
 
 @Entity
 @NoArgsConstructor @AllArgsConstructor
@@ -14,7 +15,7 @@ import javax.persistence.Id;
 public class Post {
     @Id
     @GeneratedValue
-    private Long id;
+    private UUID id;
 
     private String titulo;
 
@@ -22,6 +23,6 @@ public class Post {
 
     private String imagen;
 
-    private String imagenmini;
+    private Boolean privada;
 
 }

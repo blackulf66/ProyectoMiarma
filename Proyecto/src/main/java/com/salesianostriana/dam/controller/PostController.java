@@ -1,6 +1,5 @@
 package com.salesianostriana.dam.controller;
 
-
 import com.salesianostriana.dam.dto.post.CreatePostDto;
 import com.salesianostriana.dam.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -14,19 +13,26 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class PostController {
 
-    private final PostService service;
+    private final PostService Pservice;
 
     @PostMapping("/")
     public ResponseEntity<?> create(@RequestPart("file") MultipartFile file,
-                                    @RequestPart("post") CreatePostDto newProduct) {
+                                    @RequestPart("post") CreatePostDto newPost) {
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(service.save(newProduct, file));
+                .body(Pservice.save(newPost, file));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@RequestPart("file") MultipartFile file,
+                                    @RequestPart("post") CreatePostDto updatedPost){
+
+        return ResponseEntity.status(HttpStatus.OK).body(Pservice.save(updatedPost,file));
     }
 
     @GetMapping("/post/public")
     public ResponseEntity<?> list() {
-        return ResponseEntity.ok(service.findAll());
+        return ResponseEntity.ok(Pservice.findAll());
     }
 
 }

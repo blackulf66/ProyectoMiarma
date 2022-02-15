@@ -2,6 +2,8 @@ package com.salesianostriana.dam.security.dto;
 
 import lombok.*;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -10,9 +12,11 @@ import lombok.*;
 public class JwtUserResponse {
 
     private String email;
-    private String fullName;
+    private String nick;
     private String avatar;
     private String role;
     private String token;
+    private Date fecha;
+    private boolean perfilPrivado;
 
 }

@@ -16,11 +16,11 @@ import org.hibernate.annotations.Parameter;
 
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
-@Table(name="users")
 @EntityListeners(AuditingEntityListener.class)
 @Data
 @NoArgsConstructor
@@ -29,6 +29,7 @@ import java.util.*;
 public class UserEntity implements UserDetails {
 
     @Id
+    @GeneratedValue
     private UUID id;
 
     private String email;
@@ -37,7 +38,7 @@ public class UserEntity implements UserDetails {
 
     private String avatar;
 
-    private Date fecha;
+    private LocalDate fecha;
 
     private String nick;
 
@@ -45,16 +46,6 @@ public class UserEntity implements UserDetails {
 
     private boolean perfilprivado;
 
-    public UserEntity(UUID id, String email, String password, String avatar, Date fecha, String nick, UserRole role,Boolean perfilprivado) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-        this.avatar = avatar;
-        this.fecha = fecha;
-        this.nick = nick;
-        this.role = role;
-        this.perfilprivado = perfilprivado;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

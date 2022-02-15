@@ -51,44 +51,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/auth/register/user").anonymous()
+                //auth
+                .antMatchers(HttpMethod.POST, "/auth/register").permitAll()
                 .antMatchers(HttpMethod.POST, "/auth/login").anonymous()
-                .antMatchers(HttpMethod.POST, "/auth/register/gestor").hasRole("ADMIN")
-                .antMatchers(HttpMethod.POST, "/auth/register/admin").hasRole("ADMIN")
-
-                .antMatchers(HttpMethod.GET, "/user").authenticated()
-                .antMatchers(HttpMethod.GET, "/user/{id}").hasAnyRole("ADMIN" , "PROPIETARIO")
-                .antMatchers(HttpMethod.DELETE, "/user/{id}").hasAnyRole("ADMIN" , "PROPIETARIO")
-
-                .antMatchers(HttpMethod.POST, "/vivienda").hasRole("PROPIETARIO")
-                .antMatchers(HttpMethod.GET, "/vivienda").authenticated()
-                .antMatchers(HttpMethod.GET, "/vivienda/{id}").authenticated()
-                .antMatchers(HttpMethod.PUT, "/vivienda/{id}").hasAnyRole("ADMIN" , "PROPIETARIO")
-                .antMatchers(HttpMethod.DELETE, "/vivienda/{id}").hasAnyRole("ADMIN" , "PROPIETARIO")
-                .antMatchers(HttpMethod.POST, "/vivienda/{id}/inmobiliaria/{id2}").hasAnyRole("ADMIN" , "PROPIETARIO")
-                .antMatchers(HttpMethod.DELETE, "/vivienda/{id}/inmobiliaria/{id2}").hasAnyRole("ADMIN" , "PROPIETARIO", "GESTOR")
-
-                .antMatchers(HttpMethod.POST, "/inmobiliaria").hasRole("ADMIN")
-                .antMatchers(HttpMethod.POST, "/inmobiliaria/{id}/gestor").hasAnyRole("ADMIN" , "GESTOR")
-                .antMatchers(HttpMethod.DELETE, "/inmobiliaria/gestor/{id}").hasAnyRole("ADMIN" , "GESTOR")
-                .antMatchers(HttpMethod.GET, "/inmobiliaria/{id}/gestor").hasAnyRole("ADMIN" , "GESTOR")
-                .antMatchers(HttpMethod.GET, "/inmobiliaria").authenticated()
-                .antMatchers(HttpMethod.GET, "/inmobiliaria/{id}").authenticated()
-                .antMatchers(HttpMethod.DELETE, "/inmobiliaria/{id}/gestor").hasRole("ADMIN")
-
-                .antMatchers(HttpMethod.POST, "/vivienda/{id}/meinteresa").hasRole("PROPIETARIO")
-                .antMatchers(HttpMethod.DELETE, "/vivienda/{id}/meinteresa").hasAnyRole("ADMIN" , "PROPIETARIO")
-                .antMatchers(HttpMethod.GET, "/interesado").hasRole("ADMIN")
-                .antMatchers(HttpMethod.GET, "/interesado/{id}").hasAnyRole("ADMIN" , "PROPIETARIO")
-                .antMatchers(HttpMethod.GET, "/vivienda/top?n=10").authenticated()
-
+                .antMatchers(HttpMethod.GET, "/me").authenticated()
+                //file
+                .antMatchers(HttpMethod.GET, "/download/{filename:.+}").permitAll()
+                //post
+                .antMatchers(HttpMethod.POST, "/post/").permitAll()
 
                 .anyRequest().authenticated();
 
         http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
 
     }
-
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {

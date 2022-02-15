@@ -1,14 +1,17 @@
 package com.salesianostriana.dam.dto.post;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Value;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
-@Value
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class CreatePostDto {
-
+public class GetPostDto {
     private UUID id;
 
     private String titulo,texto;
@@ -16,5 +19,4 @@ public class CreatePostDto {
     private String imagen;
 
     private boolean privada;
-
 }

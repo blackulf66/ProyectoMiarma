@@ -54,7 +54,7 @@ public class JwtProvider {
                 .setHeaderParam("typ", TOKEN_TYPE)
                 .setSubject(user.getId().toString())
                 .setIssuedAt(tokenExpirationDate)
-                .claim("fullname", user.getFullName())
+                .claim("nick", user.getNick())
                 .claim("role", user.getRole().name())
                 .signWith(Keys.hmacShaKeyFor(jwtSecret.getBytes()))
                 .compact();

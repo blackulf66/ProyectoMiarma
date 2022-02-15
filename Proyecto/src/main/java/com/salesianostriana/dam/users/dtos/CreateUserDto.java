@@ -3,6 +3,7 @@ package com.salesianostriana.dam.users.dtos;
 
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -16,7 +17,7 @@ public class CreateUserDto {
     private String nick;
     private String email;
     private String password;
-    private Date fecha;
+    private LocalDate fecha;
     private boolean perfilPrivado;
 
 }

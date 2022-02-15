@@ -1,10 +1,13 @@
 package com.salesianostriana.dam.controller;
 
+
 import com.salesianostriana.dam.dto.post.FileResponse;
 import com.salesianostriana.dam.service.StorageService;
+
 import com.salesianostriana.dam.utils.MediaTypeUrlResource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,17 +22,16 @@ public class FileController {
 
     private final StorageService storageService;
 
+
     @PostMapping("/upload")
     public ResponseEntity<?> upload(@RequestPart("file") MultipartFile file) {
 
         String name = storageService.store(file);
 
-
         String uri = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/download/")
                 .path(name)
                 .toUriString();
-
 
         FileResponse response = FileResponse.builder()
                 .name(name)
@@ -41,7 +43,6 @@ public class FileController {
         return ResponseEntity.created(URI.create(uri)).body(response);
 
     }
-
 
     @GetMapping("/download/{filename:.+}")
     public ResponseEntity<Resource> getFile(@PathVariable String filename) {

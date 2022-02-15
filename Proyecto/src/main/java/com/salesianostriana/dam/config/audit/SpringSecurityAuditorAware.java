@@ -21,7 +21,7 @@ public class SpringSecurityAuditorAware implements AuditorAware<UUID> {
             UserEntity user = (UserEntity) authentication.getPrincipal();
             return Optional.ofNullable(user.getId());
         } catch (Exception ex) {
-            log.info("Error de auditoría: " + ex.getMessage());
+            log.info("Error: " + ex.getMessage());
         }
         return Optional.empty();
 

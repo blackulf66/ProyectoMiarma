@@ -14,20 +14,19 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/")
 public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
 
-    @PostMapping("/auth/login")
+    String jwt="";
+
+    @PostMapping("auth/login")
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
 
         Authentication authentication =
@@ -40,7 +39,7 @@ public class AuthenticationController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String jwt = jwtProvider.generateToken(authentication);
+        jwt = jwtProvider.generateToken(authentication);
 
 
         UserEntity user = (UserEntity) authentication.getPrincipal();
@@ -50,19 +49,19 @@ public class AuthenticationController {
 
     }
 
-    @GetMapping("/me")
-    public ResponseEntity<?> quienSoyYo(@AuthenticationPrincipal UserEntity user){
-        return ResponseEntity.ok(convertUserToJwtUserResponse(user, null));
+    @GetMapping("me")
+    public ResponseEntity<?> tusdatos(@AuthenticationPrincipal UserEntity user){
+        return ResponseEntity.ok(convertUserToJwtUserResponse(user, jwt));
     }
+
     private JwtUserResponse convertUserToJwtUserResponse(UserEntity user, String jwt) {
         return JwtUserResponse.builder()
-                .fullName(user.getFullName())
                 .email(user.getEmail())
                 .avatar(user.getAvatar())
                 .role(user.getRole().name())
                 .token(jwt)
+                .nick(user.getNick())
                 .build();
     }
-
 
 }

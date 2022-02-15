@@ -1,7 +1,7 @@
 package com.salesianostriana.dam.users.services;
 
-
 import com.salesianostriana.dam.service.BaseService;
+import com.salesianostriana.dam.service.StorageService;
 import com.salesianostriana.dam.users.dtos.CreateUserDto;
 import com.salesianostriana.dam.users.models.UserEntity;
 import com.salesianostriana.dam.users.models.UserRole;
@@ -13,8 +13,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service("userDetailsService")
@@ -22,12 +23,21 @@ import java.util.UUID;
 public class UserEntityService extends BaseService<UserEntity, UUID, UserEntityRepository> implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
+private final StorageService storageService;
 
-        public UserEntity saveuser(CreateUserDto newUser) {
+        public UserEntity saveuser(CreateUserDto newUser, MultipartFile file) {
+
+            String filename = storageService.store(file);
+
+            String uri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("/download/")
+                    .path(filename)
+                    .toUriString();
+
             if (newUser.getPassword().contentEquals(newUser.getPassword())) {
                 UserEntity userEntity = UserEntity.builder()
                         .password(passwordEncoder.encode(newUser.getPassword()))
-                        .avatar(newUser.getAvatar())
+                        .avatar(uri)
                         .nick(newUser.getNick())
                         .email(newUser.getEmail())
                         .role(UserRole.USER)
@@ -43,10 +53,5 @@ public class UserEntityService extends BaseService<UserEntity, UUID, UserEntityR
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return this.repositorio.findFirstByEmail(email)
                 .orElseThrow(()-> new UsernameNotFoundException(email + " no encontrado"));
-    }
-
-    public List<UserEntity> loadUserRol(UserRole userRole) throws UsernameNotFoundException {
-        return this.repositorio.findUserByRole(userRole)
-                .orElseThrow(()-> new UsernameNotFoundException(userRole + " no encontrado"));
     }
 }
