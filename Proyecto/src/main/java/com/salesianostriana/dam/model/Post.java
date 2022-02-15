@@ -23,6 +23,6 @@ public class Post {
 
     private String imagen;
 
-    private Boolean privada;
+    private PostEnum postEnum;
 
 }

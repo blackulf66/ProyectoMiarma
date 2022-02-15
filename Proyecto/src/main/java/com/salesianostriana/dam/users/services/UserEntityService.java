@@ -23,7 +23,7 @@ import java.util.UUID;
 public class UserEntityService extends BaseService<UserEntity, UUID, UserEntityRepository> implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
-private final StorageService storageService;
+    private final StorageService storageService;
 
         public UserEntity saveuser(CreateUserDto newUser, MultipartFile file) {
 

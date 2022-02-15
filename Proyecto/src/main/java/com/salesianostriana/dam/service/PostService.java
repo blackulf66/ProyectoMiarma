@@ -28,14 +28,17 @@ public class PostService {
                 .toUriString();
 
         return postRepository.save(Post.builder()
-                .titulo(createPostDto.getTitulo())
+                        .titulo(createPostDto.getTitulo())
+                        .texto(createPostDto.getTexto())
+                        .postEnum(createPostDto.getPostEnum())
                         .imagen(uri)
-                .build());
+                        .build());
     }
 
-    public List<Post> findAll() {
+    public List<Post> findByPostEnum() {
         return postRepository.findAll();
     }
+
 
 
 }

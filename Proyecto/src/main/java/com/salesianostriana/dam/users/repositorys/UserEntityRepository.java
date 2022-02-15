@@ -16,7 +16,5 @@ public interface UserEntityRepository extends JpaRepository<UserEntity, UUID> {
     @Override
     Optional<UserEntity> findById(UUID uuid);
 
-    Optional<List<UserEntity>> findUserByRole(UserRole userRole);
-
 }
 

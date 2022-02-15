@@ -1,5 +1,6 @@
 package com.salesianostriana.dam.dto.post;
 
+import com.salesianostriana.dam.model.PostEnum;
 import lombok.Builder;
 import lombok.Value;
 
@@ -15,6 +16,5 @@ public class CreatePostDto {
 
     private String imagen;
 
-    private boolean privada;
-
+    private PostEnum postEnum;
 }

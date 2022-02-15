@@ -1,4 +1,4 @@
-package com.salesianostriana.dam.service.impl;
+package com.salesianostriana.dam.service;
 
 import com.salesianostriana.dam.config.StorageProperties;
 import com.salesianostriana.dam.exception.FileNotFoundException;

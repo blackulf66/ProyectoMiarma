@@ -58,7 +58,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //file
                 .antMatchers(HttpMethod.GET, "/download/{filename:.+}").permitAll()
                 //post
-                .antMatchers(HttpMethod.POST, "/post/").permitAll()
+                .antMatchers(HttpMethod.POST, "/post/").authenticated()
+                .antMatchers(HttpMethod.POST, "/post/public").authenticated()
 
                 .anyRequest().authenticated();
 
