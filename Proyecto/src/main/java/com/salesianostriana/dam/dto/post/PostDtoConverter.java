@@ -22,9 +22,6 @@ public class PostDtoConverter {
 
     public GetPostDto postToGetPostDto(Post p , UserEntity user){
 
-
-
-
         return GetPostDto
                 .builder()
                 .id(p.getId())
@@ -32,7 +29,7 @@ public class PostDtoConverter {
                 .texto(p.getTexto())
                 .imagen(p.getImagen())
                 .postEnum(p.getPostEnum())
-                .user(p.getUser())
+                .user(user)
                 .build();
     }
 }

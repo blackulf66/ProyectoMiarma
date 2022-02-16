@@ -99,14 +99,14 @@ public class PostService {
         return postRepository.findById(id);
     }
 
-    public List<Post> findByUserNickname(String nickname){
+    /*public List<Post> findByUserNickname(String nickname){
         return postRepository.findUserByNickname(nickname);
     }
 
     public List<GetPostDto> listPostDto(String nickname){
         List<Post> listaPost = postRepository.findUserByNickname(nickname);
-        return listaPost.stream().map(postDtoConverter.postToGetPostDto()).collect(Collectors.toList());
-    }
+        return listaPost.stream().map(postDtoConverter::postToGetPostDto).collect(Collectors.toList());
+    }*/
 
     }
 

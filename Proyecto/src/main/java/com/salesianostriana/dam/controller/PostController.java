@@ -80,8 +80,8 @@ public class PostController {
 
         }
 
-        @GetMapping("/nick")
-    public ResponseEntity<List<GetPostDto>> finduserbynickname(@RequestParam(value = "nickname") String nickname){
+       /* @GetMapping("/nick")
+        public ResponseEntity<List<GetPostDto>> finduserbynickname(@RequestParam(value = "nickname") String nickname){
 
         if(nickname.isBlank()){
             return ResponseEntity.notFound().build();
@@ -89,7 +89,7 @@ public class PostController {
            return ResponseEntity.ok().body(Pservice.listPostDto(nickname));
         }
 
-        }
+        }*/
 
 
 
