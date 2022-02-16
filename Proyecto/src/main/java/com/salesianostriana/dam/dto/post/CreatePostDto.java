@@ -10,7 +10,7 @@ import java.util.UUID;
 @Builder
 public class CreatePostDto {
 
-    private UUID id;
+    private Long id;
 
     private String titulo,texto;
 

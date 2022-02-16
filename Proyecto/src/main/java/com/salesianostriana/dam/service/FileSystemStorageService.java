@@ -5,14 +5,21 @@ import com.salesianostriana.dam.exception.FileNotFoundException;
 import com.salesianostriana.dam.exception.StorageException;
 import com.salesianostriana.dam.service.StorageService;
 import com.salesianostriana.dam.utils.MediaTypeUrlResource;
+import lombok.SneakyThrows;
+import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -26,6 +33,10 @@ import java.util.stream.Stream;
 public class FileSystemStorageService implements StorageService {
 
     private final Path rootLocation;
+
+    BufferedImage simpleResizeImage(BufferedImage originalImage, int targetWidth) throws Exception {
+        return Scalr.resize(originalImage, targetWidth);
+    }
 
     @Autowired
     public FileSystemStorageService(StorageProperties properties) {
@@ -42,10 +53,76 @@ public class FileSystemStorageService implements StorageService {
         }
     }
 
+
     @Override
     public String store(MultipartFile file) {
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
+
         String newFilename = "";
+
+
+        try {
+            if (file.isEmpty())
+                throw new StorageException("El fichero subido está vacío");
+            newFilename = filename;
+            while(Files.exists(rootLocation.resolve(newFilename))) {
+                String extension = StringUtils.getFilenameExtension(newFilename);
+                String name = newFilename.replace("."+extension,"");
+
+                String suffix = Long.toString(System.currentTimeMillis());
+                suffix = suffix.substring(suffix.length()-6);
+
+                newFilename = name + "_" + suffix + "." + extension;
+
+            }
+
+            try (InputStream inputStream = file.getInputStream()) {
+                Files.copy(inputStream, rootLocation.resolve(newFilename),
+                        StandardCopyOption.REPLACE_EXISTING);
+            }
+
+        } catch (IOException ex) {
+            throw new StorageException("Error en el almacenamiento del fichero: " + newFilename, ex);
+        }
+
+        return newFilename;
+    }
+
+    @Override
+    public String storeOr(MultipartFile file) {
+        String filename = StringUtils.cleanPath(file.getOriginalFilename());
+        String newFilename = "";
+        try {
+            if (file.isEmpty())
+                throw new StorageException("El fichero subido está vacío");
+            newFilename = filename;
+            while(Files.exists(rootLocation.resolve(newFilename))) {
+                String extension = StringUtils.getFilenameExtension(newFilename);
+                String name = newFilename.replace("."+extension,"");
+
+                String suffix = Long.toString(System.currentTimeMillis());
+                suffix = suffix.substring(suffix.length()-6);
+
+                newFilename = name + "_" + suffix + "." + extension;
+
+            }
+
+            try (InputStream inputStream = file.getInputStream()) {
+                Files.copy(inputStream, rootLocation.resolve(newFilename),
+                        StandardCopyOption.REPLACE_EXISTING);
+            }
+
+        } catch (IOException ex) {
+            throw new StorageException("Error en el almacenamiento del fichero: " + newFilename, ex);
+        }
+
+        return newFilename;
+    }
+    @Override
+    public String storePost(MultipartFile file) {
+        String filename = StringUtils.cleanPath(file.getOriginalFilename());
+        String newFilename = "";
+
         try {
             if (file.isEmpty())
                 throw new StorageException("El fichero subido está vacío");
@@ -117,4 +194,21 @@ public class FileSystemStorageService implements StorageService {
     public void deleteAll() {
         FileSystemUtils.deleteRecursively(rootLocation.toFile());
     }
+
+    public MultipartFile scaleImage(MultipartFile file , int size) throws IOException{
+
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        String extension = StringUtils.getFilenameExtension(fileName);
+        String finalName = fileName.replace("."+extension,"");
+
+        BufferedImage original = ImageIO.read(file.getInputStream());
+        BufferedImage scalada = Scalr.resize(original , size);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        ImageIO.write(scalada , extension ,baos);
+
+        return new MockMultipartFile(finalName , baos.toByteArray());
+     }
+
 }

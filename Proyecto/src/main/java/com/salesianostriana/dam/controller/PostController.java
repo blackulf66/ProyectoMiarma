@@ -1,6 +1,9 @@
 package com.salesianostriana.dam.controller;
 
 import com.salesianostriana.dam.dto.post.CreatePostDto;
+import com.salesianostriana.dam.dto.post.GetPostDto;
+import com.salesianostriana.dam.exception.FileNotFoundException;
+import com.salesianostriana.dam.model.Post;
 import com.salesianostriana.dam.model.PostEnum;
 import com.salesianostriana.dam.repository.PostRepository;
 import com.salesianostriana.dam.service.PostService;
@@ -11,6 +14,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/post")
@@ -23,24 +30,33 @@ public class PostController {
 
     @PostMapping("/")
     public ResponseEntity<?> create(@RequestPart("file") MultipartFile file,
-                                    @RequestPart("post") CreatePostDto newPost) {
+                                    @RequestPart("post") CreatePostDto newPost  ,
+                                    @RequestParam UserEntity usuario) throws IOException {
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(Pservice.save(newPost, file));
+                .body(Pservice.save(newPost, file, usuario));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@RequestPart("file") MultipartFile file,
-                                    @RequestPart("post") CreatePostDto updatedPost){
+    public ResponseEntity<Optional<GetPostDto>> updatePublicacion(@PathVariable Long id, @RequestPart("post") CreatePostDto updatePost, @RequestPart("file") MultipartFile file) throws Exception {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(Pservice.updatePost(id, updatePost, file));
 
-        return ResponseEntity.status(HttpStatus.OK).body(Pservice.save(updatedPost,file));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deletePost(@PathVariable Long id) throws Exception {
+        if (id.equals(null)){
+            throw new FileNotFoundException("no se encuentra el archivo");
+        }else{
+            Pservice.deletePost(id);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
     }
 
     @GetMapping("/public")
     public ResponseEntity<?> list() {
         return ResponseEntity.ok(postRepository.findByPostEnum(PostEnum.PUBLICO));
     }
-
-
 
 }

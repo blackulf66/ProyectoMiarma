@@ -13,7 +13,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class GetPostDto {
-    private UUID id;
+    private Long id;
 
     private String titulo,texto;
 
