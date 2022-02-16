@@ -1,11 +1,15 @@
 package com.salesianostriana.dam.dto.post;
 
 import com.salesianostriana.dam.model.Post;
+import com.salesianostriana.dam.users.models.UserEntity;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PostDtoConverter {
     public Post createPostDtoToPost(CreatePostDto c){
+
+
+
         return new Post(
                 c.getId(),
                 c.getTitulo(),
@@ -16,7 +20,11 @@ public class PostDtoConverter {
         );
     }
 
-    public GetPostDto postToGetPostDto(Post p){
+    public GetPostDto postToGetPostDto(Post p , UserEntity user){
+
+
+
+
         return GetPostDto
                 .builder()
                 .id(p.getId())

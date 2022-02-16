@@ -11,6 +11,7 @@ import com.salesianostriana.dam.service.StorageService;
 import com.salesianostriana.dam.users.models.UserEntity;
 import com.salesianostriana.dam.users.repositorys.UserEntityRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +22,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +33,7 @@ public class PostService {
     private final PostDtoConverter postDtoConverter;
     private final UserEntityRepository userEntityRepository;
 
-    public Post save(CreatePostDto createPostDto, MultipartFile file ) throws IOException {
+    public Post save(CreatePostDto createPostDto, MultipartFile file ,UserEntity user) throws IOException {
 
         storageService.scaleImage(file , 100);
 
@@ -47,7 +49,7 @@ public class PostService {
                         .texto(createPostDto.getTexto())
                         .postEnum(createPostDto.getPostEnum())
                         .imagen(uri)
-                        .user(createPostDto.getUser())
+                        .user(user)
                         .build());
     }
 
@@ -63,7 +65,7 @@ public class PostService {
         postRepository.deleteById(id);
     }
 
-    public Optional<GetPostDto> updatePost (Long id, CreatePostDto p, MultipartFile file) throws Exception {
+    public Optional<GetPostDto> updatePost (Long id, CreatePostDto p, MultipartFile file ,UserEntity user) throws Exception {
 
             Optional<Post> data = postRepository.findById(id);
             String name = StringUtils.cleanPath(String.valueOf(data.get().getImagen())).replace("http://localhost:8080/download", "");
@@ -85,12 +87,25 @@ public class PostService {
                 m.setTexto(p.getTexto());
                 m.setImagen(uri);
                 postRepository.save(m);
-                return postDtoConverter.postToGetPostDto(m);
+                return postDtoConverter.postToGetPostDto(m , user);
             });
         }
 
     public List<Post> findByPostEnum(PostEnum postEnum) {
         return postRepository.findAll();
+    }
+
+    public Optional<Post> findPostById(Long id){
+        return postRepository.findById(id);
+    }
+
+    public List<Post> findByUserNickname(String nickname){
+        return postRepository.findUserByNickname(nickname);
+    }
+
+    public List<GetPostDto> listPostDto(String nickname){
+        List<Post> listaPost = postRepository.findUserByNickname(nickname);
+        return listaPost.stream().map(postDtoConverter.postToGetPostDto()).collect(Collectors.toList());
     }
 
     }

@@ -10,4 +10,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findByPostEnum(PostEnum xmen);
 
+    List<Post> findUserByNickname(String nickname);
+
+
+
 }
