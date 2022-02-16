@@ -9,6 +9,7 @@ import com.salesianostriana.dam.repository.PostRepository;
 import com.salesianostriana.dam.service.PostService;
 import com.salesianostriana.dam.users.models.UserEntity;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -30,11 +31,10 @@ public class PostController {
 
     @PostMapping("/")
     public ResponseEntity<?> create(@RequestPart("file") MultipartFile file,
-                                    @RequestPart("post") CreatePostDto newPost  ,
-                                    @RequestParam UserEntity usuario) throws IOException {
+                                    @RequestPart("post") CreatePostDto newPost ) throws IOException {
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(Pservice.save(newPost, file, usuario));
+                .body(Pservice.save(newPost, file));
     }
 
     @PutMapping("/{id}")
@@ -58,5 +58,6 @@ public class PostController {
     public ResponseEntity<?> list() {
         return ResponseEntity.ok(postRepository.findByPostEnum(PostEnum.PUBLICO));
     }
+
 
 }

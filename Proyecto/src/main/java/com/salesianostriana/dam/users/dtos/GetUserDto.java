@@ -1,10 +1,12 @@
 package com.salesianostriana.dam.users.dtos;
 
+import com.salesianostriana.dam.users.models.UserEntity;
 import com.salesianostriana.dam.users.models.UserRole;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -20,5 +22,6 @@ public class GetUserDto {
     private String email;
     private LocalDate fecha;
     private boolean perfilPrivado;
+    private List<UserEntity> following;
 
 }

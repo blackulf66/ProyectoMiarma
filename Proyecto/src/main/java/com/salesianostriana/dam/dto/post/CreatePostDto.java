@@ -1,6 +1,7 @@
 package com.salesianostriana.dam.dto.post;
 
 import com.salesianostriana.dam.model.PostEnum;
+import com.salesianostriana.dam.users.models.UserEntity;
 import lombok.Builder;
 import lombok.Value;
 
@@ -17,4 +18,7 @@ public class CreatePostDto {
     private String imagen;
 
     private PostEnum postEnum;
+
+    private UserEntity user;
+
 }

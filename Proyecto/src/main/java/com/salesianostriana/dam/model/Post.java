@@ -3,12 +3,8 @@ package com.salesianostriana.dam.model;
 
 import com.salesianostriana.dam.users.models.UserEntity;
 import lombok.*;
-import org.apache.catalina.User;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -17,9 +13,10 @@ import java.util.UUID;
 @NoArgsConstructor @AllArgsConstructor
 @Builder
 @Getter @Setter
+@Table(name = "posts")
 public class Post {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String titulo;
@@ -29,6 +26,14 @@ public class Post {
     private String imagen;
 
     private PostEnum postEnum;
+
+    @ManyToOne()
+    @JoinColumn(name = "post_id")
+    private UserEntity user;
+
+
+
+
 
 
 }

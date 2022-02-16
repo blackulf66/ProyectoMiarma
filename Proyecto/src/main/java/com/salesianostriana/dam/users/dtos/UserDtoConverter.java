@@ -13,6 +13,7 @@ public class UserDtoConverter {
                 .email(user.getEmail())
                 .fecha(user.getFecha())
                 .perfilPrivado(user.isPerfilprivado())
+                .following(user.getFollowing())
                 .build();
 
     }

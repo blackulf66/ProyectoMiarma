@@ -31,9 +31,7 @@ public class PostService {
     private final PostDtoConverter postDtoConverter;
     private final UserEntityRepository userEntityRepository;
 
-    public Post save(CreatePostDto createPostDto, MultipartFile file , UserEntity usuario) throws IOException {
-
-        usuario  = userEntityRepository.findFirstByEmail(usuario.getEmail()).get();
+    public Post save(CreatePostDto createPostDto, MultipartFile file ) throws IOException {
 
         storageService.scaleImage(file , 100);
 
@@ -49,6 +47,7 @@ public class PostService {
                         .texto(createPostDto.getTexto())
                         .postEnum(createPostDto.getPostEnum())
                         .imagen(uri)
+                        .user(createPostDto.getUser())
                         .build());
     }
 
@@ -69,7 +68,8 @@ public class PostService {
             Optional<Post> data = postRepository.findById(id);
             String name = StringUtils.cleanPath(String.valueOf(data.get().getImagen())).replace("http://localhost:8080/download", "");
             Path pa = storageService.load(name);
-            String filename = StringUtils.cleanPath(String.valueOf(pa)).replace("http://localhost:8080/download", "");;
+            String filename = StringUtils.cleanPath(String.valueOf(pa)).replace("http://localhost:8080/download", "");
+            ;
             storageService.deleteFile(filename);
 
             String or = storageService.storeOr(file);
@@ -93,4 +93,6 @@ public class PostService {
         return postRepository.findAll();
     }
 
-}
+    }
+
+

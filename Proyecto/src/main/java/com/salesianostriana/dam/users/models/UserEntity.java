@@ -1,17 +1,14 @@
 package com.salesianostriana.dam.users.models;
 
+import com.salesianostriana.dam.model.Post;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.NaturalId;
-import org.springframework.data.annotation.CreatedDate;
+
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.hibernate.annotations.Parameter;
 
 
 
@@ -26,6 +23,7 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "user")
 public class UserEntity implements UserDetails {
 
     @Id
@@ -46,6 +44,22 @@ public class UserEntity implements UserDetails {
 
     private boolean perfilprivado;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Post> Posts;
+
+   @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "relation",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "following_id"))
+    private List<UserEntity> following;
+
+    public List<UserEntity> getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(List<UserEntity> following) {
+        this.following = following;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

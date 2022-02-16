@@ -54,4 +54,5 @@ public class UserEntityService extends BaseService<UserEntity, UUID, UserEntityR
         return this.repositorio.findFirstByEmail(email)
                 .orElseThrow(()-> new UsernameNotFoundException(email + " no encontrado"));
     }
+
 }

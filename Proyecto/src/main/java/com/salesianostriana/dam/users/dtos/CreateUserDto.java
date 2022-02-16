@@ -1,10 +1,12 @@
 package com.salesianostriana.dam.users.dtos;
 
 
+import com.salesianostriana.dam.users.models.UserEntity;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,5 +21,6 @@ public class CreateUserDto {
     private String password;
     private LocalDate fecha;
     private boolean perfilPrivado;
+    private List<UserEntity> following;
 
 }
