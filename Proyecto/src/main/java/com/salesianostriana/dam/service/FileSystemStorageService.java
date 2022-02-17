@@ -34,13 +34,14 @@ public class FileSystemStorageService implements StorageService {
 
     private final Path rootLocation;
 
-    BufferedImage simpleResizeImage(BufferedImage originalImage, int targetWidth) throws Exception {
-        return Scalr.resize(originalImage, targetWidth);
-    }
-
     @Autowired
     public FileSystemStorageService(StorageProperties properties) {
         this.rootLocation = Paths.get(properties.getLocation());
+    }
+
+    @Override
+    public BufferedImage simpleResizer(BufferedImage bufferedImage, int width) {
+        return Scalr.resize(bufferedImage,width);
     }
 
     @PostConstruct

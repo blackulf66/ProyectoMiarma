@@ -18,8 +18,12 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.imageio.ImageIO;
 import javax.transaction.Transactional;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
@@ -39,9 +43,17 @@ public class PostService {
 
     public Post save(CreatePostDto createPostDto, MultipartFile file ,UserEntity user) throws IOException {
 
-        storageService.scaleImage(file , 100);
-
         String filename = storageService.store(file);
+
+        String extension = StringUtils.getFilenameExtension(filename);
+
+        BufferedImage originalImage = ImageIO.read(file.getInputStream());
+
+        BufferedImage escaledImage = storageService.simpleResizer(originalImage,1024);
+
+        OutputStream outputStream = Files.newOutputStream(storageService.load(filename));
+
+        ImageIO.write(escaledImage,extension,outputStream);
 
         String uri = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/download/")

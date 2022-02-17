@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.util.stream.Stream;
 
 public interface StorageService {
+    BufferedImage simpleResizer(BufferedImage bufferedImage, int width) ;
 
     void init();
 

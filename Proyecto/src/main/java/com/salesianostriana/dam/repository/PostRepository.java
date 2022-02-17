@@ -22,7 +22,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             """)
     List<Post> findPostUserByNick(@Param("postEnum") PostEnum postEnum,@Param("nick") String nick);
 
-    @EntityGraph(value = "Post-UserEntity")
+    @EntityGraph(type = EntityGraph.EntityGraphType.FETCH , value = "Post-UserEntity")
     List<Post> findByUserNick(String nick);
 
 

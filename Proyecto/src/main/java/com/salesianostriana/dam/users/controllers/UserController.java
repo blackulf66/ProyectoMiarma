@@ -21,6 +21,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 @RestController
 @RequiredArgsConstructor
 @Api(tags = "Los controladores de propietarios")
@@ -34,7 +36,7 @@ public class UserController {
     private final JwtProvider jwtProvider;
 
     @PostMapping("auth/register")
-    public ResponseEntity<GetUserDto> nuevoUsuario(@RequestPart CreateUserDto nuevoUser, @RequestPart MultipartFile file) {
+    public ResponseEntity<GetUserDto> nuevoUsuario(@RequestPart CreateUserDto nuevoUser, @RequestPart MultipartFile file) throws IOException {
         UserEntity saved = userEntityService.saveuser(nuevoUser , file);
         if (saved == null)
             return ResponseEntity.badRequest().build();
