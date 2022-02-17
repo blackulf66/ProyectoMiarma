@@ -8,9 +8,9 @@ import com.salesianostriana.dam.model.Post;
 import com.salesianostriana.dam.model.PostEnum;
 import com.salesianostriana.dam.repository.PostRepository;
 import com.salesianostriana.dam.service.PostService;
+import com.salesianostriana.dam.users.dtos.GetUserDto;
 import com.salesianostriana.dam.users.models.UserEntity;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/post")
@@ -40,7 +39,7 @@ public class PostController {
         Post postCreated = Pservice.save(newPost, file , user);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(postDtoConverter.postToGetPostDto(postCreated , user));
+                .body(postDtoConverter.postToGetPostDto(postCreated));
     }
 
     @PutMapping("/{id}")
@@ -62,10 +61,8 @@ public class PostController {
 
     @GetMapping("/public")
     public ResponseEntity<?> list() {
-        return ResponseEntity.ok(postRepository.findByPostEnum(PostEnum.PUBLICO));
+        return ResponseEntity.ok(Pservice.findByPostEnum(PostEnum.PUBLICO));
     }
-
-
 
     @GetMapping("/{id}")
     public ResponseEntity<GetPostDto> findpostbyID(@PathVariable Long id, @AuthenticationPrincipal UserEntity user){
@@ -75,23 +72,14 @@ public class PostController {
             return ResponseEntity.notFound().build();
 
         }else{
-            return ResponseEntity.ok().body(postDtoConverter.postToGetPostDto(postOptional.get(),user));
+            return ResponseEntity.ok().body(postDtoConverter.postToGetPostDto(postOptional.get()));
         }
 
         }
+    @GetMapping("/")
+    public ResponseEntity<?> findPostByUserNickname(@RequestParam(value = "nick") String nick , @AuthenticationPrincipal UserEntity user) {
+       List<GetPostDto> posta = Pservice.findPostByUserNickname(nick, user);
+        return ResponseEntity.ok().body(posta);
 
-       /* @GetMapping("/nick")
-        public ResponseEntity<List<GetPostDto>> finduserbynickname(@RequestParam(value = "nickname") String nickname){
-
-        if(nickname.isBlank()){
-            return ResponseEntity.notFound().build();
-        }else{
-           return ResponseEntity.ok().body(Pservice.listPostDto(nickname));
         }
-
-        }*/
-
-
-
-
 }

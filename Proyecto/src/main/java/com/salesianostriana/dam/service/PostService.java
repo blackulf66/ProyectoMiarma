@@ -8,6 +8,7 @@ import com.salesianostriana.dam.model.PostEnum;
 import com.salesianostriana.dam.repository.PostRepository;
 import com.salesianostriana.dam.model.Post;
 import com.salesianostriana.dam.service.StorageService;
+import com.salesianostriana.dam.users.dtos.GetUserDto;
 import com.salesianostriana.dam.users.models.UserEntity;
 import com.salesianostriana.dam.users.repositorys.UserEntityRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,9 +18,12 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -44,13 +48,17 @@ public class PostService {
                 .path(filename)
                 .toUriString();
 
-        return postRepository.save(Post.builder()
-                        .titulo(createPostDto.getTitulo())
-                        .texto(createPostDto.getTexto())
-                        .postEnum(createPostDto.getPostEnum())
-                        .imagen(uri)
-                        .user(user)
-                        .build());
+        Post post3 = Post.builder()
+                .titulo(createPostDto.getTitulo())
+                .texto(createPostDto.getTexto())
+                .postEnum(createPostDto.getPostEnum())
+                .imagen(uri)
+                .user(user)
+                .build();
+
+        userEntityRepository.save(user);
+
+        return postRepository.save(post3);
     }
 
     public void deletePost(Long id) throws Exception {
@@ -87,26 +95,39 @@ public class PostService {
                 m.setTexto(p.getTexto());
                 m.setImagen(uri);
                 postRepository.save(m);
-                return postDtoConverter.postToGetPostDto(m , user);
+                return postDtoConverter.postToGetPostDto(m);
             });
         }
 
-    public List<Post> findByPostEnum(PostEnum postEnum) {
-        return postRepository.findAll();
+    public List<GetPostDto> findByPostEnum(PostEnum postEnum) {
+
+        List<Post> listaa = postRepository.findByPostEnum(postEnum);
+
+       return listaa.stream().map(postDtoConverter::postToGetPostDto).toList();
     }
 
     public Optional<Post> findPostById(Long id){
         return postRepository.findById(id);
     }
 
-    /*public List<Post> findByUserNickname(String nickname){
-        return postRepository.findUserByNickname(nickname);
-    }
 
-    public List<GetPostDto> listPostDto(String nickname){
-        List<Post> listaPost = postRepository.findUserByNickname(nickname);
-        return listaPost.stream().map(postDtoConverter::postToGetPostDto).collect(Collectors.toList());
-    }*/
+    public List<GetPostDto> findPostByUserNickname(String nick, UserEntity user){
+
+        List<Post> listaa = postRepository.findByUserNick(nick);
+        List<Post> listab = postRepository.findPostUserByNick(PostEnum.PUBLICO , nick);
+        List<Post> listac = postRepository.findAll();
+
+        UserEntity user1 = userEntityRepository.findByNick(nick);
+        UserEntity user2 = userEntityRepository.findByFollowingContains(user);
+
+        if(listac.isEmpty()){
+            return Collections.EMPTY_LIST;
+        }else if (!user1.equals(user2)){
+            return listab.stream().map(postDtoConverter::postToGetPostDto).collect(Collectors.toList());
+        }else{
+            return listaa.stream().map(postDtoConverter::postToGetPostDto).collect(Collectors.toList());
+        }
+    }
 
     }
 

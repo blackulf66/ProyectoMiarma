@@ -1,11 +1,9 @@
 package com.salesianostriana.dam.users.models;
 
 import com.salesianostriana.dam.model.Post;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import org.hibernate.annotations.Fetch;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,11 +17,11 @@ import java.util.*;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Table(name = "user")
+@Getter @Setter
 public class UserEntity implements UserDetails {
 
     @Id
@@ -44,8 +42,8 @@ public class UserEntity implements UserDetails {
 
     private boolean perfilprivado;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Post> Posts;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<Post> posts;
 
    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "relation",

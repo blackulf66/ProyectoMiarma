@@ -6,22 +6,18 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PostDtoConverter {
-    public Post createPostDtoToPost(CreatePostDto c){
-
-
-
-        return new Post(
-                c.getId(),
-                c.getTitulo(),
-                c.getTexto(),
-                c.getImagen(),
-                c.getPostEnum(),
-                c.getUser()
-        );
+    public CreatePostDto createPostDtoToPost(CreatePostDto c , UserEntity usuario){
+        return CreatePostDto.builder()
+                .id(c.getId())
+                .titulo(c.getTitulo())
+                .imagen(c.getImagen())
+                .postEnum(c.getPostEnum())
+                .texto(c.getTexto())
+                .username(usuario.getNick())
+                .build();
     }
 
-    public GetPostDto postToGetPostDto(Post p , UserEntity user){
-
+    public GetPostDto postToGetPostDto(Post p){
         return GetPostDto
                 .builder()
                 .id(p.getId())
@@ -29,7 +25,8 @@ public class PostDtoConverter {
                 .texto(p.getTexto())
                 .imagen(p.getImagen())
                 .postEnum(p.getPostEnum())
-                .user(user)
+                .username(p.getUser().getNick())
                 .build();
     }
+
 }

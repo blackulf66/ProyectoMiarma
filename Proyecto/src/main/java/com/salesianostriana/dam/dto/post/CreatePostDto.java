@@ -19,6 +19,9 @@ public class CreatePostDto {
 
     private PostEnum postEnum;
 
-    private UserEntity user;
+    private String username;
+
+
+
 
 }
