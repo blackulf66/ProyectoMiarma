@@ -5,11 +5,16 @@ import com.salesianostriana.dam.users.models.UserEntity;
 import lombok.*;
 import javax.persistence.*;
 
+@NamedEntityGraphs({
+        @NamedEntityGraph(
+                name = "Post-UserEntity",
+                attributeNodes = { @NamedAttributeNode("user") })
+})
 @Entity
 @NoArgsConstructor @AllArgsConstructor
 @Builder
 @Getter @Setter
-@Table(name = "posts")
+
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

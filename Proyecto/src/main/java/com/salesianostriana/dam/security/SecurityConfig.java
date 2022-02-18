@@ -65,6 +65,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/post/{id}").authenticated()
                 .antMatchers(HttpMethod.GET,"/post/{nick}").authenticated()
 
+                //user
+                .antMatchers(HttpMethod.GET, "/user/{id}").authenticated()
+                .antMatchers(HttpMethod.PUT, "/user/{id}").authenticated()
+
+
                 .anyRequest().authenticated();
 
         http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);

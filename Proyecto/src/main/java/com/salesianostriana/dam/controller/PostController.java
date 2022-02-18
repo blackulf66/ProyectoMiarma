@@ -7,6 +7,7 @@ import com.salesianostriana.dam.exception.FileNotFoundException;
 import com.salesianostriana.dam.model.Post;
 import com.salesianostriana.dam.model.PostEnum;
 import com.salesianostriana.dam.repository.PostRepository;
+import com.salesianostriana.dam.service.FileSystemStorageService;
 import com.salesianostriana.dam.service.PostService;
 import com.salesianostriana.dam.users.dtos.GetUserDto;
 import com.salesianostriana.dam.users.models.UserEntity;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/post")
@@ -29,6 +31,7 @@ public class PostController {
     private final PostService Pservice;
     private final PostRepository postRepository;
     private final PostDtoConverter postDtoConverter;
+    private final FileSystemStorageService fileSystemStorageService;
 
 
     @PostMapping("/")
@@ -51,9 +54,12 @@ public class PostController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletePost(@PathVariable Long id) throws Exception {
+
+        Optional<Post> pOptional = Pservice.findPostById(id);
         if (id.equals(null)){
             throw new FileNotFoundException("no se encuentra el archivo");
         }else{
+            fileSystemStorageService.deleteFile(pOptional.get().getImagen());
             Pservice.deletePost(id);
             return ResponseEntity.status(HttpStatus.OK).build();
         }
@@ -77,9 +83,13 @@ public class PostController {
 
         }
     @GetMapping("/")
-    public ResponseEntity<?> findPostByUserNickname(@RequestParam(value = "nick") String nick , @AuthenticationPrincipal UserEntity user) {
-       List<GetPostDto> posta = Pservice.findPostByUserNickname(nick, user);
-        return ResponseEntity.ok().body(posta);
+    public ResponseEntity<?> findPostByUserNickname(@RequestParam(value = "nick") String nick ) {
+       List<Post> posta = Pservice.findPostByUserNickname(nick);
+
+       if(posta.isEmpty()) {
+           return ResponseEntity.noContent().build();
+       }else{
+            return ResponseEntity.ok().body(posta.stream().map(postDtoConverter::postToGetPostDto).collect(Collectors.toList()));
 
         }
-}
+}}

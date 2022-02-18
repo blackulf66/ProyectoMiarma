@@ -4,6 +4,7 @@ import com.salesianostriana.dam.dto.post.CreatePostDto;
 import com.salesianostriana.dam.dto.post.GetPostDto;
 import com.salesianostriana.dam.dto.post.PostDtoConverter;
 import com.salesianostriana.dam.exception.FileNotFoundException;
+import com.salesianostriana.dam.exception.SingleEntityNotFoundException;
 import com.salesianostriana.dam.model.PostEnum;
 import com.salesianostriana.dam.repository.PostRepository;
 import com.salesianostriana.dam.model.Post;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.imageio.ImageIO;
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -42,6 +44,8 @@ public class PostService {
     private final UserEntityRepository userEntityRepository;
 
     public Post save(CreatePostDto createPostDto, MultipartFile file ,UserEntity user) throws IOException {
+
+        String filenameOriginal = storageService.store(file);
 
         String filename = storageService.store(file);
 
@@ -73,7 +77,7 @@ public class PostService {
         return postRepository.save(post3);
     }
 
-    public void deletePost(Long id) throws Exception {
+    public void deletePost(Long id) throws SingleEntityNotFoundException {
         Optional<Post> data = postRepository.findById(id);
         String name = StringUtils.cleanPath(String.valueOf(data.get().getImagen()))
                 .replace("http://localhost:8080/download", "");
@@ -85,7 +89,7 @@ public class PostService {
         postRepository.deleteById(id);
     }
 
-    public Optional<GetPostDto> updatePost (Long id, CreatePostDto p, MultipartFile file ,UserEntity user) throws Exception {
+    public Optional<GetPostDto> updatePost (Long id, CreatePostDto p, MultipartFile file ,UserEntity user) throws EntityNotFoundException {
 
             Optional<Post> data = postRepository.findById(id);
             String name = StringUtils.cleanPath(String.valueOf(data.get().getImagen())).replace("http://localhost:8080/download", "");
@@ -123,21 +127,12 @@ public class PostService {
     }
 
 
-    public List<GetPostDto> findPostByUserNickname(String nick, UserEntity user){
+    public List<Post> findPostByUserNickname(String nick) throws EntityNotFoundException{
 
-        List<Post> listaa = postRepository.findByUserNick(nick);
-        List<Post> listab = postRepository.findPostUserByNick(PostEnum.PUBLICO , nick);
-        List<Post> listac = postRepository.findAll();
-
-        UserEntity user1 = userEntityRepository.findByNick(nick);
-        UserEntity user2 = userEntityRepository.findByFollowingContains(user);
-
-        if(listac.isEmpty()){
+        if(userEntityRepository.findAllByNick(nick).isEmpty()){
             return Collections.EMPTY_LIST;
-        }else if (!user1.equals(user2)){
-            return listab.stream().map(postDtoConverter::postToGetPostDto).collect(Collectors.toList());
         }else{
-            return listaa.stream().map(postDtoConverter::postToGetPostDto).collect(Collectors.toList());
+            return userEntityRepository.findAllByNick(nick).get().getPosts();
         }
     }
 
