@@ -1,8 +1,12 @@
 package com.salesianostriana.dam.users.services;
 
+import com.salesianostriana.dam.dto.peticion.CreateSeguimientoDTO;
 import com.salesianostriana.dam.dto.post.CreatePostDto;
 import com.salesianostriana.dam.dto.post.GetPostDto;
+import com.salesianostriana.dam.exception.UserException;
 import com.salesianostriana.dam.model.Post;
+import com.salesianostriana.dam.model.Seguimiento;
+import com.salesianostriana.dam.repository.SeguimientoRepository;
 import com.salesianostriana.dam.service.BaseService;
 import com.salesianostriana.dam.service.StorageService;
 import com.salesianostriana.dam.users.dtos.CreateUserDto;
@@ -33,6 +37,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -44,6 +49,7 @@ public class UserEntityService extends BaseService<UserEntity, UUID, UserEntityR
     private final StorageService storageService;
     private final UserEntityRepository userEntityRepository;
     private final UserDtoConverter userDtoConverter;
+    private final SeguimientoRepository seguimientoRepository;
 
         public UserEntity saveuser(CreateUserDto newUser, MultipartFile file) throws IOException {
 
@@ -115,6 +121,80 @@ public class UserEntityService extends BaseService<UserEntity, UUID, UserEntityR
             return userDtoConverter.convertUserEntityToGetUserDto(m);
         });
     }
+
+    public Optional<GetUserDto> actualizarPerfil(UserEntity user, CreateUserDto u, MultipartFile file) throws Exception {
+        if (file.isEmpty()){
+            Optional<UserEntity> data = userEntityRepository.findById(user.getId());
+            return data.map(m -> {
+                m.setNick(u.getNick());
+                m.setEmail(u.getEmail());
+                m.setAvatar(u.getAvatar());
+                m.setAvatar(m.getAvatar());
+                m.setEmail(u.getEmail());
+                userEntityRepository.save(m);
+                return userDtoConverter.convertUserEntityToGetUserDto(m);
+            });
+        }else{
+
+            Optional<UserEntity> data = userEntityRepository.findById(user.getId());
+            String name = StringUtils.cleanPath(String.valueOf(data.get().getAvatar())).replace("http://localhost:8080/download/", "");
+            Path p = storageService.load(name);
+            String filename = StringUtils.cleanPath(String.valueOf(p)).replace("http://localhost:8080/download/", "");
+            Path pa = Paths.get(filename);
+            storageService.deleteFile(pa.toString());
+            String avatar = storageService.storePost(file);
+
+            String uri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("/download/")
+                    .path(avatar)
+                    .toUriString();
+
+            return data.map(m -> {
+                m.setNick(u.getNick());
+                m.setAvatar(u.getAvatar());
+                m.setAvatar(uri);
+                m.setEmail(u.getEmail());
+                userEntityRepository.save(m);
+                return userDtoConverter.convertUserEntityToGetUserDto(m);
+            });
+
+        }
+    }
+
+    public Seguimiento sendSeguimiento (String nick, CreateSeguimientoDTO createSeguimientoDto, UserEntity user){
+        UserEntity usuario= userEntityRepository.findByNick(nick);
+        if(usuario==null || usuario.getNick().equals(user.getNick())){
+            throw new UserException("No puedes enviarte peticiones a ti mismo");
+        }else{
+            Seguimiento seguimiento = Seguimiento.builder()
+                    .peticion(createSeguimientoDto.getTexto() + user.getNick())
+                    .origen(user)
+                    .destino(usuario)
+                    .build();
+            usuario.addPeticion(seguimiento);
+            userEntityRepository.save(usuario);
+            seguimientoRepository.save(seguimiento);
+            return seguimiento;
+        }
+    }
+
+    public void aceptarSeguimiento(Long id, UserEntity user){
+
+        Optional<Seguimiento> peticion = seguimientoRepository.findById(id);
+        user.addSeguidor(peticion.get().getOrigen());
+        save(user);
+        peticion.get().nullearDestinatarios();
+        seguimientoRepository.save(peticion.get());
+        seguimientoRepository.deleteById(id);
+    }
+
+    public void rechazarSeguimiento(Long id){
+        Optional<Seguimiento> peticionSeguimiento = seguimientoRepository.findById(id);
+        peticionSeguimiento.get().nullearDestinatarios();
+        seguimientoRepository.save(peticionSeguimiento.get());
+        seguimientoRepository.deleteById(id);
+    }
+
 
 
 

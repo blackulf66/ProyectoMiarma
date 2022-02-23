@@ -57,6 +57,8 @@ public class PostService {
 
         OutputStream outputStream = Files.newOutputStream(storageService.load(filename));
 
+        OutputStream outputStream2 = Files.newOutputStream(storageService.load(filenameOriginal));
+
         ImageIO.write(escaledImage,extension,outputStream);
 
         String uri = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -95,7 +97,6 @@ public class PostService {
             String name = StringUtils.cleanPath(String.valueOf(data.get().getImagen())).replace("http://localhost:8080/download", "");
             Path pa = storageService.load(name);
             String filename = StringUtils.cleanPath(String.valueOf(pa)).replace("http://localhost:8080/download", "");
-            ;
             storageService.deleteFile(filename);
 
             String or = storageService.storeOr(file);
@@ -126,14 +127,21 @@ public class PostService {
         return postRepository.findById(id);
     }
 
+    public List<GetPostDto> findPostByUserNickname(String nick, UserEntity user){
 
-    public List<Post> findPostByUserNickname(String nick) throws EntityNotFoundException{
-
-        if(userEntityRepository.findAllByNick(nick).isEmpty()){
+        List<Post> publiList = postRepository.findAll();
+        List<Post> publiList1 = postRepository.findByUserNick(nick);
+        List<Post> publiList2 = postRepository.findByPostEnum(PostEnum.PUBLICO);
+        UserEntity u = userEntityRepository.findByNick(nick);
+        UserEntity s = userEntityRepository.findByFollowingContains(user);
+        if(publiList.isEmpty() && publiList.isEmpty()){
             return Collections.EMPTY_LIST;
+        }else if (!u.equals(s)){
+            return publiList2.stream().map(postDtoConverter::postToGetPostDto).collect(Collectors.toList());
         }else{
-            return userEntityRepository.findAllByNick(nick).get().getPosts();
+            return publiList1.stream().map(postDtoConverter::postToGetPostDto).collect(Collectors.toList());
         }
+
     }
 
     }

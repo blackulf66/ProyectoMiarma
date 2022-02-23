@@ -18,6 +18,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -56,12 +57,13 @@ public class PostController {
     public ResponseEntity<?> deletePost(@PathVariable Long id) throws Exception {
 
         Optional<Post> pOptional = Pservice.findPostById(id);
+
         if (id.equals(null)){
             throw new FileNotFoundException("no se encuentra el archivo");
         }else{
             fileSystemStorageService.deleteFile(pOptional.get().getImagen());
             Pservice.deletePost(id);
-            return ResponseEntity.status(HttpStatus.OK).build();
+            return ResponseEntity.noContent().build();
         }
     }
 
@@ -83,13 +85,12 @@ public class PostController {
 
         }
     @GetMapping("/")
-    public ResponseEntity<?> findPostByUserNickname(@RequestParam(value = "nick") String nick ) {
-       List<Post> posta = Pservice.findPostByUserNickname(nick);
-
-       if(posta.isEmpty()) {
-           return ResponseEntity.noContent().build();
-       }else{
-            return ResponseEntity.ok().body(posta.stream().map(postDtoConverter::postToGetPostDto).collect(Collectors.toList()));
-
+    public ResponseEntity<List<GetPostDto>> listAllPostByNick(@RequestParam(value = "nick") String nick, @AuthenticationPrincipal UserEntity u){
+        List<GetPostDto> publi = Pservice.findPostByUserNickname(nick, u);
+        if(u==null){
+            throw new EntityNotFoundException("El nick no existe");
+        }else{
+            return ResponseEntity.ok().body(publi);
         }
-}}
+    }
+}
