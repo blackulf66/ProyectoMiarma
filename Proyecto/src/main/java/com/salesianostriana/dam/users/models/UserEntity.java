@@ -43,7 +43,7 @@ public class UserEntity implements UserDetails {
 
     private boolean perfilprivado;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Post> posts;
 
    @ManyToMany(fetch = FetchType.LAZY)

@@ -1,5 +1,6 @@
 package com.salesianostriana.dam.users.dtos;
 
+import com.salesianostriana.dam.model.Post;
 import com.salesianostriana.dam.users.models.UserEntity;
 import com.salesianostriana.dam.users.models.UserRole;
 import lombok.*;
@@ -23,5 +24,6 @@ public class GetUserDto {
     private LocalDate fecha;
     private boolean perfilPrivado;
     private List<UserEntity> following;
+    private List<Post> posts;
 
 }

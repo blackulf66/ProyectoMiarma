@@ -78,6 +78,7 @@ public class UserEntityService extends BaseService<UserEntity, UUID, UserEntityR
                         .email(newUser.getEmail())
                         .role(UserRole.USER)
                         .perfilprivado(newUser.isPerfilPrivado())
+                        .posts(newUser.getPosts())
                         .build();
                 return save(userEntity);
             } else {

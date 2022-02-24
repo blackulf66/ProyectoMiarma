@@ -14,6 +14,7 @@ public class UserDtoConverter {
                 .fecha(user.getFecha())
                 .perfilPrivado(user.isPerfilprivado())
                 .following(user.getFollowing())
+                .posts(user.getPosts())
                 .build();
 
     }

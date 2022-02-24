@@ -1,6 +1,8 @@
 package com.salesianostriana.dam.security;
 
 
+import com.salesianostriana.dam.dto.post.PostDtoConverter;
+import com.salesianostriana.dam.model.Post;
 import com.salesianostriana.dam.security.dto.JwtUserResponse;
 import com.salesianostriana.dam.security.dto.LoginDto;
 import com.salesianostriana.dam.security.jwt.JwtProvider;
@@ -16,6 +18,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.stream.Collectors;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/")
@@ -23,6 +27,7 @@ public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
+    private final PostDtoConverter dto;
 
     String jwt="";
 
@@ -61,6 +66,7 @@ public class AuthenticationController {
                 .role(user.getRole().name())
                 .token(jwt)
                 .nick(user.getNick())
+                .posts(user.getPosts().stream().map(dto::postToGetPostDto).collect(Collectors.toList()))
                 .build();
     }
 
