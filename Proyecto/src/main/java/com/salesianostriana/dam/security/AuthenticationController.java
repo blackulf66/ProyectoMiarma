@@ -64,6 +64,7 @@ public class AuthenticationController {
                 .email(user.getEmail())
                 .avatar(user.getAvatar())
                 .role(user.getRole().name())
+                .username(user.getUsername())
                 .token(jwt)
                 .nick(user.getNick())
                 .posts(user.getPosts().stream().map(dto::postToGetPostDto).collect(Collectors.toList()))
