@@ -44,8 +44,16 @@ public class UserController {
     private final SeguimientoService seguimientoService;
 
     @PostMapping("auth/register")
-    public ResponseEntity<GetUserDto> nuevoUsuario(@RequestPart CreateUserDto nuevoUser, @RequestPart MultipartFile file) throws IOException {
-        UserEntity saved = userEntityService.saveuser(nuevoUser , file);
+    public ResponseEntity<GetUserDto> nuevoUsuario(@RequestParam("nick") String nick , @RequestParam("email") String email,@RequestParam("password") String password,@RequestParam("perfilProvado") Boolean perfilProvado, @RequestPart MultipartFile file) throws IOException {
+
+        CreateUserDto createUserDto = CreateUserDto.builder()
+                .nick(nick)
+                .email(email)
+                .password(password)
+                .perfilPrivado(perfilProvado)
+                .build();
+
+        UserEntity saved = userEntityService.saveuser(createUserDto , file);
         if (saved == null)
             return ResponseEntity.badRequest().build();
         else
