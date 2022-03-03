@@ -37,8 +37,15 @@ public class PostController {
 
     @PostMapping("/")
     public ResponseEntity<?> create(@RequestPart("file") MultipartFile file,
-                                    @RequestPart("post") CreatePostDto newPost,
+                                    @RequestParam("titulo") String titulo,
+                                    @RequestParam("texto") String texto,
+                                    @RequestParam("postEnum") PostEnum postEnum,
                                     @AuthenticationPrincipal UserEntity user) throws IOException {
+        CreatePostDto newPost = CreatePostDto.builder()
+                .titulo(titulo)
+                .texto(texto)
+                .postEnum(postEnum)
+                .build();
 
         Post postCreated = Pservice.save(newPost, file , user);
 
