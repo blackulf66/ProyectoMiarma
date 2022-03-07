@@ -21,6 +21,8 @@ public class CreatePostDto {
 
     private String username;
 
+    private String userImage;
+
 
 
 

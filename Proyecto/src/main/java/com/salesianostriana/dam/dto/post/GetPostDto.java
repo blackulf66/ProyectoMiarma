@@ -25,6 +25,9 @@ public class GetPostDto {
 
     private String username;
 
+    private String userImage;
+
+
 
 
 

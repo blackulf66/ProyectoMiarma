@@ -23,6 +23,8 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/")
+@CrossOrigin
+
 public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;

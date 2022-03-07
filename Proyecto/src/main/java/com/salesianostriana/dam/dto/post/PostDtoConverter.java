@@ -14,6 +14,7 @@ public class PostDtoConverter {
                 .postEnum(c.getPostEnum())
                 .texto(c.getTexto())
                 .username(usuario.getNick())
+                .userImage(usuario.getAvatar())
                 .build();
     }
 
@@ -26,6 +27,7 @@ public class PostDtoConverter {
                 .imagen(p.getImagen())
                 .postEnum(p.getPostEnum())
                 .username(p.getUser().getNick())
+                .userImage(p.getUser().getAvatar())
                 .build();
     }
 
